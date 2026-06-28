@@ -26,4 +26,16 @@ jobs:
         context: . 
         file: ./docker/Dockerfile.ws
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app-websocket:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app-websocket:latest
+
+    ## Step 3: SSH into the VM and restart the websocket container
+    - name: Deploy to VM
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          cd ~/todo-app
+          docker compose pull websocket
+          docker compose up -d websocket

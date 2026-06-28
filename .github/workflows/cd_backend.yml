@@ -26,4 +26,16 @@ jobs:
         context: . 
         file: ./docker/Dockerfile.backend
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app-backend:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app-backend:latest
+
+    ## Step 3: SSH into the VM and restart the backend container
+    - name: Deploy to VM
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          cd ~/todo-app
+          docker compose pull backend
+          docker compose up -d backend

@@ -1,0 +1,26 @@
+services:
+  backend:
+    image: ${DOCKERHUB_USERNAME}/todo-app-backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    restart: unless-stopped
+
+  websocket:
+    image: ${DOCKERHUB_USERNAME}/todo-app-websocket:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    restart: unless-stopped
+
+  frontend:
+    image: ${DOCKERHUB_USERNAME}/todo-app-frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://backend:8080
+    depends_on:
+      - backend
+    restart: unless-stopped

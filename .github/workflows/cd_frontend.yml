@@ -28,4 +28,16 @@ jobs:
         build-args: |
           DATABASE_URL=${{ secrets.DATABASE_URL }}
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app-frontend:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app-frontend:latest
+
+    ## Step 3: SSH into the VM and restart the frontend container
+    - name: Deploy to VM
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          cd ~/todo-app
+          docker compose pull frontend
+          docker compose up -d frontend
