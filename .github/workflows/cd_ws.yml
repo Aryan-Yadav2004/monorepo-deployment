@@ -2,7 +2,7 @@
 ## Push the docker image to docker hub
 ## SSH into our VM and start the new image
 
-name: Deploy the backend
+name: Deploy the websocket
 on: 
   push:
     branches: [ main ]
