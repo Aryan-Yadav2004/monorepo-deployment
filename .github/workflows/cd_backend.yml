@@ -26,4 +26,4 @@ jobs:
         context: . 
         file: ./docker/Dockerfile.backend
         push: true
-        tags: monorepo/todo-app-backend:${{github.sha}}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app-backend:${{ github.sha }}
