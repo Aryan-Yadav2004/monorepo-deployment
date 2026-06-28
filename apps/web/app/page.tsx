@@ -1,14 +1,29 @@
-import { prismaClient } from "db";
+// force-dynamic: fetch runs at request time, not during the build
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const users = await prismaClient.user.findMany();
+  let users: { id: string; username: string }[] = [];
+
+  try {
+    const backendUrl = process.env.BACKEND_URL ?? "http://localhost:8080";
+    const res = await fetch(`${backendUrl}/users`, { cache: "no-store" });
+    users = await res.json();
+  } catch {
+    // backend may not be reachable during SSR — degrade gracefully
+  }
+
   return (
     <div>
-      {JSON.stringify(users)}
+      <h1>Users</h1>
+      {users.length === 0 ? (
+        <p>No users found.</p>
+      ) : (
+        <ul>
+          {users.map((u) => (
+            <li key={u.id}>{u.username}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
-
-// export const revalidate = 60 // revalidate every 60 seconds
-// or
-export const dynamic = 'force-dynamic'
