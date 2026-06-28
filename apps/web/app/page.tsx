@@ -14,6 +14,7 @@ export default async function Home() {
 
   return (
     <div>
+      <h1>Hi aryan</h1>
       <h1>Users</h1>
       {users.length === 0 ? (
         <p>No users found.</p>
